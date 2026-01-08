@@ -1,0 +1,7 @@
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
+WINDOW_TITLE = "test"
+BOOL_ISFULLSCREEN = True
+BACKGROUND_COLOR = (124, 143, 230)
+MUSIC_VOLUME = 0.5
+GITHUB_REPO_PAGE = "https://github.com/Silentfeeel/towerdefence"
