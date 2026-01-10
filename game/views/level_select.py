@@ -17,7 +17,7 @@ class LevelSelect(arcade.View):
 
         self.medival_cursor = arcade.Sprite(
             os.path.join(ASSETS_PATH, "pngs", "medival_cursor.png"),
-            scale=1.0
+            scale=0.8
         )
         self.cursor_sprite_list.append(self.medival_cursor)
         
@@ -79,14 +79,19 @@ class LevelSelect(arcade.View):
         for sprite in clicked_sprites:
             if sprite == self.back_to_main_menu_btn:
                 from views.main_menu import MainMenuView
-                main_view = MainMenuView(True if self.music_player and self.music_player.playing else False)
+
+                main_view = MainMenuView()
+
                 self.window.show_view(main_view)
-                pass
-            elif sprite == self.github_logo:
-                pass
+            elif sprite == self.papirus_easy:
+                from views.level_easy import LevelEasy
+
+                self.level_easy = LevelEasy()
+
+                self.window.show_view(self.level_easy)
             elif sprite == self.start_btn:
                 pass
 
     def on_mouse_motion(self, x, y, dx, dy):
-        self.medival_cursor.center_x = x
-        self.medival_cursor.center_y = y
+        self.medival_cursor.center_x = x + 5
+        self.medival_cursor.center_y = y - 5

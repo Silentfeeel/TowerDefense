@@ -5,9 +5,8 @@ from config import MUSIC_VOLUME, GITHUB_REPO_PAGE
 from views.level_select import LevelSelect
 
 class MainMenuView(arcade.View):
-    def __init__(self, is_music=True):
+    def __init__(self):
         super().__init__()
-        self.is_music = is_music
 
         self.main_menu_buttons = arcade.SpriteList()
         self.cursor_sprite_list = arcade.SpriteList()
@@ -22,7 +21,7 @@ class MainMenuView(arcade.View):
 
         self.medival_cursor = arcade.Sprite(
             os.path.join(ASSETS_PATH, "pngs", "medival_cursor.png"),
-            scale=1.0
+            scale=0.8
         )
         self.cursor_sprite_list.append(self.medival_cursor)
 
@@ -67,10 +66,10 @@ class MainMenuView(arcade.View):
         self.main_menu_buttons.append(self.main_menu_title)
         self.main_menu_buttons.append(self.github_logo)
 
-        if not self.is_music:
-            music_path = os.path.join(ASSETS_PATH, "music", "main_theme.mp3")
-            self.main_theme_music = arcade.load_sound(music_path)
-            self.music_player = arcade.play_sound(self.main_theme_music, volume=MUSIC_VOLUME, loop=True)
+        # if not self.is_music:
+        #     music_path = os.path.join(ASSETS_PATH, "music", "main_theme.mp3")
+        #     self.main_theme_music = arcade.load_sound(music_path)
+        #     self.music_player = arcade.play_sound(self.main_theme_music, volume=MUSIC_VOLUME, loop=True)
 
     def on_show_view(self):
         self.window.set_mouse_visible(False)
@@ -99,5 +98,5 @@ class MainMenuView(arcade.View):
                 pass
 
     def on_mouse_motion(self, x, y, dx, dy):
-        self.medival_cursor.center_x = x
-        self.medival_cursor.center_y = y
+        self.medival_cursor.center_x = x + 5
+        self.medival_cursor.center_y = y - 5
