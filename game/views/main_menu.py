@@ -5,14 +5,16 @@ from config import MUSIC_VOLUME, GITHUB_REPO_PAGE
 from views.level_select import LevelSelect
 
 class MainMenuView(arcade.View):
-    def __init__(self):
+    def __init__(self, is_music=True):
         super().__init__()
+        self.is_music = is_music
 
         self.main_menu_buttons = arcade.SpriteList()
         self.cursor_sprite_list = arcade.SpriteList()
 
         self.main_theme_music = None
         self.music_player = None
+        self.setup()
 
     def setup(self):
         BASE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -65,9 +67,10 @@ class MainMenuView(arcade.View):
         self.main_menu_buttons.append(self.main_menu_title)
         self.main_menu_buttons.append(self.github_logo)
 
-        music_path = os.path.join(ASSETS_PATH, "music", "main_theme.mp3")
-        self.main_theme_music = arcade.load_sound(music_path)
-        self.music_player = arcade.play_sound(self.main_theme_music, volume=MUSIC_VOLUME, loop=True)
+        if not self.is_music:
+            music_path = os.path.join(ASSETS_PATH, "music", "main_theme.mp3")
+            self.main_theme_music = arcade.load_sound(music_path)
+            self.music_player = arcade.play_sound(self.main_theme_music, volume=MUSIC_VOLUME, loop=True)
 
     def on_show_view(self):
         self.window.set_mouse_visible(False)
