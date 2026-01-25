@@ -12,6 +12,10 @@ class LevelEasy(arcade.View):
         self.another_sprite_list = arcade.SpriteList()
         self.cursor_sprite_list = arcade.SpriteList()
         self.green_circles_list = arcade.SpriteList()
+        self.towers_sprite_list = arcade.SpriteList()
+        self.hitchams_sprite_list = arcade.SpriteList()
+
+        self.money = 234234234
 
         self.waves_cnt = 10
         self.setup()
@@ -57,12 +61,57 @@ class LevelEasy(arcade.View):
             arcade.rect.XYWH(self.window.width // 2, self.window.height // 2, self.window.width, self.window.height)
         )
 
+        arcade.draw_text(f"Количество монет: {self.money}", 
+                        x=self.window.width - 700, 
+                        y=self.window.height - 40, 
+                        color=arcade.color.DARK_RED, 
+                        font_size=40)
+
         self.map_sprite_list.draw()
         self.green_circles_list.draw()
+        self.hitchams_sprite_list.draw()
+        self.towers_sprite_list.draw()
         self.cursor_sprite_list.draw()
+
+    def place_hitcham(self, tower_sprite):
+        hitcham_sprite = arcade.Sprite(
+            os.path.join(ASSETS_PATH, "pngs", "green_circle.png"),
+            scale=0.36
+        )
+
+        hitcham_sprite.center_x = tower_sprite.center_x
+        hitcham_sprite.center_y = tower_sprite.center_y
+        hitcham_sprite.alpha = 0
+
+        self.hitchams_sprite_list.append(hitcham_sprite)
+
+    def place_tower(self, circle_sprite, x, y):
+        if self.money > 300:
+            tower_sprite = arcade.Sprite(
+                os.path.join(ASSETS_PATH, "pngs", "red_square.png"),
+                scale=0.18
+            )
+
+            tower_sprite.center_x = circle_sprite.center_x
+            tower_sprite.center_y = circle_sprite.center_y
+
+            self.towers_sprite_list.append(tower_sprite)
+            self.money -= 300
+
+            self.place_hitcham(tower_sprite)
+
+            circle_sprite.remove_from_sprite_lists()
+
 
     def on_mouse_press(self, x, y, button, modifiers):
         print(f"Клик в координатах: x={x}, y={y}")
+
+        clicked_sprites_circles = arcade.get_sprites_at_point((x, y), self.green_circles_list)
+
+        if clicked_sprites_circles:
+            target_circle = clicked_sprites_circles[0]
+            self.place_tower(target_circle, x, y)
+
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.medival_cursor.center_x = x + 5
