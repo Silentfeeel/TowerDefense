@@ -7,7 +7,7 @@ class EnemySprite(arcade.Sprite):
         super().__init__(scale=scale)
         self.path = path_points
         self.current_point_index = 0
-        self.speed = 2.0
+        self.speed = 1
         self.hp = 100
         
         self.walk_textures = []

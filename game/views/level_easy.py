@@ -1,6 +1,6 @@
 import arcade
 import os
-import math
+import random
 from other_classes.tower import TowerSprite
 from other_classes.bullet import BulletSprite
 from other_classes.enemy import EnemySprite
@@ -8,16 +8,22 @@ from other_classes.enemy import EnemySprite
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 ASSETS_PATH = os.path.join(BASE_PATH, "..", "..", "assets")
 
-ENEMY_PATH = [
-    (-50, 650),
-    (300, 650),
-    (300, 300),
-    (900, 300),
-    (900, 600),
-    (1300, 600),
-    (1300, 400),
-    (1600, 400)
+ENEMY_PATH_RAND_F = [
+    (34, 471),
+    (309, 461),
+    (332, 149),
+    (966, 126),
+    (958, 439)
 ]
+
+ENEMY_PATH_RAND_S = [
+    (1897, 475),
+    (1605, 467),
+    (1587, 156),
+    (967, 146),
+    (962, 416)
+]
+
 
 class LevelEasy(arcade.View):
     def __init__(self):
@@ -33,12 +39,18 @@ class LevelEasy(arcade.View):
 
         self.money = 500
         self.spawn_timer = 0
-        self.enemies_cooldown = 2.0
+        self.enemies_cooldown = 1
+        self.enemies_spawned = 0
+        self.max_enemies = 20
+
+        self.all_enemies_spawned = False
+        self.health = 3 
         
         self.setup()
         self.place_green_cirles()
     
     def setup(self):
+
         self.bg_img = arcade.load_texture(
             os.path.join(ASSETS_PATH, "pngs", "easy_map.png")
         )
@@ -50,9 +62,12 @@ class LevelEasy(arcade.View):
         self.cursor_sprite_list.append(self.medival_cursor)
 
     def place_green_cirles(self):
-        circles_coords = ((478, 577), (478, 471), (480, 348),(561, 246),
-                          (722, 237),(855, 239), (1089, 237),(1261, 240),
-                          (1391, 238),(1449, 367), (1452, 537),(1256, 745),
+        circles_coords = ((478, 577), (478, 471), 
+                          (480, 348),(561, 246),
+                          (722, 237),(855, 239), 
+                          (1089, 237),(1261, 240),
+                          (1391, 238),(1449, 367), 
+                          (1452, 537),(1256, 745),
                           (694, 741))
 
         for coords in circles_coords:
@@ -78,6 +93,18 @@ class LevelEasy(arcade.View):
                     color=arcade.color.WHITE, 
                     font_size=40)
 
+        arcade.draw_text(f"Осталось мобов: {self.max_enemies - self.enemies_spawned}/{self.max_enemies}", 
+                    x=self.window.width - 700, 
+                    y=self.window.height - 80, 
+                    color=arcade.color.WHITE, 
+                    font_size=40)
+        
+        arcade.draw_text(f"Жизни: {self.health}", 
+                    x=self.window.width - 700, 
+                    y=self.window.height - 120, 
+                    color=arcade.color.WHITE, 
+                    font_size=40)
+        
         self.map_sprite_list.draw()
         self.green_circles_list.draw()
         self.hitchams_sprite_list.draw()
@@ -85,6 +112,12 @@ class LevelEasy(arcade.View):
         self.enemies_list.draw()
         self.bullets_list.draw()
         self.cursor_sprite_list.draw()
+
+    def check_if_enemies_left(self):
+        if len(self.enemies_list) == 0:
+            from game.views.end_game_s import EndGame
+            end_view = EndGame(self.money, {self.max_enemies - self.enemies_spawned}/{self.max_enemies})
+            self.window.show_view(end_view)
 
     def place_tower(self, circle_sprite, x, y):
         if self.money >= 300:
@@ -123,12 +156,35 @@ class LevelEasy(arcade.View):
         self.bullets_list.append(bullet)
 
     def on_update(self, delta_time):
+        if self.health <= 0:
+            from game.views.end_game_s import EndGame
+            end_view = EndGame(self.money, {self.max_enemies - self.enemies_spawned})
+            self.window.show_view(end_view)
+            return
+        
+        if self.all_enemies_spawned and len(self.enemies_list) == 0:
+            self.check_if_enemies_left()
+            return
+        
         self.spawn_timer += delta_time
-        if self.spawn_timer > self.enemies_cooldown:
-            new_enemy = EnemySprite(ENEMY_PATH, scale=0.6)
+        if self.spawn_timer > self.enemies_cooldown and self.enemies_spawned < self.max_enemies:
+            new_enemy = EnemySprite(ENEMY_PATH_RAND_S if random.randint(0, 1) < 0.5 else ENEMY_PATH_RAND_F, scale=0.6)
             self.enemies_list.append(new_enemy)
+            self.enemies_spawned += 1
             self.spawn_timer = 0
 
+            if self.enemies_spawned >= self.max_enemies:
+                self.all_enemies_spawned = True
+
+        enemies_to_remove = []
+        for enemy in self.enemies_list:
+            if enemy.current_point_index >= len(enemy.path):
+                self.health -= 1
+                enemies_to_remove.append(enemy)
+        
+        for enemy in enemies_to_remove:
+            enemy.remove_from_sprite_lists()
+        
         self.enemies_list.update()
 
         for tower in self.towers_sprite_list:
