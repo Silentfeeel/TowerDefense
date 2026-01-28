@@ -25,7 +25,7 @@ ENEMY_PATH_RAND_S = [
 ]
 
 
-class LevelEasy(arcade.View):
+class LevelNormal(arcade.View):
     def __init__(self):
         super().__init__()
         
@@ -37,14 +37,14 @@ class LevelEasy(arcade.View):
         self.bullets_list = arcade.SpriteList()
         self.enemies_list = arcade.SpriteList()
 
-        self.money = 500
+        self.money = 300
         self.spawn_timer = 0
-        self.enemies_cooldown = 3
+        self.enemies_cooldown = 2
         self.enemies_spawned = 0
-        self.max_enemies = 20
+        self.max_enemies = 30
 
         self.all_enemies_spawned = False
-        self.health = 3 
+        self.health = 2 
         
         self.setup()
         self.place_green_cirles()
@@ -168,7 +168,7 @@ class LevelEasy(arcade.View):
         
         self.spawn_timer += delta_time
         if self.spawn_timer > self.enemies_cooldown and self.enemies_spawned < self.max_enemies:
-            new_enemy = EnemySprite(ENEMY_PATH_RAND_S if random.randint(0, 1) < 0.5 else ENEMY_PATH_RAND_F, scale=0.6, level=1)
+            new_enemy = EnemySprite(ENEMY_PATH_RAND_S if random.randint(0, 1) < 0.5 else ENEMY_PATH_RAND_F, scale=0.6, level=2)
             self.enemies_list.append(new_enemy)
             self.enemies_spawned += 1
             self.spawn_timer = 0
@@ -217,7 +217,7 @@ class LevelEasy(arcade.View):
                     enemy.hp -= bullet.damage
                     if enemy.hp <= 0:
                         enemy.remove_from_sprite_lists()
-                        self.money += 50
+                        self.money += 35
 
     def on_mouse_press(self, x, y, button, modifiers):
         clicked_sprites_circles = arcade.get_sprites_at_point((x, y), self.green_circles_list)

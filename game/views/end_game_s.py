@@ -43,11 +43,36 @@ class EndGame(arcade.View):
             arcade.rect.XYWH(self.window.width // 2, self.window.height // 2, self.window.width, self.window.height)
         )
 
+        arcade.draw_text(
+            f"{self.money}",
+            1385,
+            152,
+            arcade.color.WHITE,
+            font_size=30
+        )
+
+        arcade.draw_text(
+            f"{self.death_cnts}",
+            882,
+            161,
+            arcade.color.WHITE,
+            font_size=30
+        )
+
+        arcade.draw_text(
+            f"100",
+            420,
+            158,
+            arcade.color.WHITE,
+            font_size=30
+        )
+
         self.back_to_main_menu_btn_list.draw()
         self.cursor_sprite_list.draw()
 
 
     def on_mouse_press(self, x, y, button, modifiers):
+        print(f"{x}, {y}")
         clicked_sprites = arcade.get_sprites_at_point((x, y), self.back_to_main_menu_btn_list)
 
         for sprite in clicked_sprites:

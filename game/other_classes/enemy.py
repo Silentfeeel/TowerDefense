@@ -3,11 +3,12 @@ import math
 
 
 class EnemySprite(arcade.Sprite):
-    def __init__(self, path_points, scale=1.0):
+    def __init__(self, path_points, scale, level):
         super().__init__(scale=scale)
         self.path = path_points
+        self.level = level
         self.current_point_index = 0
-        self.speed = 1
+        self.speed = level
         self.hp = 100
         
         self.walk_textures = []

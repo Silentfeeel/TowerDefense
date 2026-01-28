@@ -24,7 +24,7 @@ class EndGame(arcade.View):
         self.cursor_sprite_list.append(self.medival_cursor)
 
         self.bg_img = arcade.load_texture(
-            os.path.join(ASSETS_PATH, "pngs", "end_game_bg_s.png")
+            os.path.join(ASSETS_PATH, "pngs", "end_game_bg_f.png")
         )
 
         self.back_to_main_menu_btn = arcade.Sprite(

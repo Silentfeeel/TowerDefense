@@ -89,7 +89,22 @@ class LevelSelect(arcade.View):
                 self.level_easy = LevelEasy()
 
                 self.window.show_view(self.level_easy)
-            elif sprite == self.start_btn:
+
+            elif sprite == self.papirus_normal:
+                from views.level_normal import LevelNormal
+
+                self.level_normal = LevelNormal()
+
+                self.window.show_view(self.level_normal)
+            
+            elif sprite == self.papirus_hard:
+                from views.level_hard import LevelHard
+
+                self.level_hard = LevelHard()
+
+                self.window.show_view(self.level_hard)
+                
+            elif sprite == self.papirus_hard:
                 pass
 
     def on_mouse_motion(self, x, y, dx, dy):
