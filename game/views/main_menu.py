@@ -66,10 +66,9 @@ class MainMenuView(arcade.View):
         self.main_menu_buttons.append(self.main_menu_title)
         self.main_menu_buttons.append(self.github_logo)
 
-        # if not self.is_music:
-        #     music_path = os.path.join(ASSETS_PATH, "music", "main_theme.mp3")
-        #     self.main_theme_music = arcade.load_sound(music_path)
-        #     self.music_player = arcade.play_sound(self.main_theme_music, volume=MUSIC_VOLUME, loop=True)
+        music_path = os.path.join(ASSETS_PATH, "music", "main_theme.mp3")
+        self.main_theme_music = arcade.load_sound(music_path)
+        self.music_player = arcade.play_sound(self.main_theme_music, volume=MUSIC_VOLUME, loop=True)
 
     def on_show_view(self):
         self.window.set_mouse_visible(False)
